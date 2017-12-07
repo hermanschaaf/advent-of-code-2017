@@ -29,14 +29,23 @@ class Node(object):
         self.earliest = math.inf
 
     def solve(self):
-        vals = []
+        counts = defaultdict(list)
         for child in self.children:
-            vals.append(child.solve())
+            v = child.solve()
+            counts[v].append(child)
 
-        self.sum = self.value + sum(vals)
-        if len(set(vals)) != 1:
-            print(self.name, vals)
-            return self.sum
+        if len(counts) > 1:
+            good_apple, bad_apple = None, None
+            for v, ch in counts.items():
+                if len(ch) > 1:
+                    good_apple = v
+                else:
+                    bad_apple = v
+            print(counts[good_apple][0].sum - counts[bad_apple][0].sum + counts[bad_apple][0].value)
+            counts[good_apple] += counts[bad_apple]
+            counts[bad_apple] = []
+
+        self.sum = self.value + sum((v * len(ch) for v, ch in counts.items()))
         return self.sum
 
     def __repr__(self):
@@ -62,14 +71,14 @@ if __name__ == "__main__":
                         nodes[child] = Node(name=child, value=None)
                     nodes[name].add_child(nodes[child])
         except Exception as e:
-
-            print(e)
+            # print(e)
             break
     root = None
     for name, node in nodes.items():
-        print(node.name, node.value)
+        # print(node.name, node.value)
         if len(node.parents) == 0:
             root = node
 
     print("Part 1:", root.name)
-    print("Part 2:", root.solve())
+    print("Part 2:", end=" ")
+    root.solve()
