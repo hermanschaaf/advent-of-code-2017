@@ -28,6 +28,17 @@ class Node(object):
         self.processed = False
         self.earliest = math.inf
 
+    def solve(self):
+        vals = []
+        for child in self.children:
+            vals.append(child.solve())
+
+        self.sum = self.value + sum(vals)
+        if len(set(vals)) != 1:
+            print(self.name, vals)
+            return self.sum
+        return self.sum
+
     def __repr__(self):
         return self.name
 
@@ -40,9 +51,9 @@ if __name__ == "__main__":
 
             name, value = groups['name'], groups['value']
             if name not in nodes:
-                nodes[name] = Node(name, value)
+                nodes[name] = Node(name, int(value.strip("()")))
             else:
-                nodes[name].value = value
+                nodes[name].value = int(value.strip("()"))
 
             if groups['children']:
                 children = list(map(str.strip, groups['children'].split(",")))
@@ -54,7 +65,11 @@ if __name__ == "__main__":
 
             print(e)
             break
-
+    root = None
     for name, node in nodes.items():
+        print(node.name, node.value)
         if len(node.parents) == 0:
-            print(node.name)
+            root = node
+
+    print("Part 1:", root.name)
+    print("Part 2:", root.solve())
