@@ -21,24 +21,10 @@ dirs = {
 }
 
 
-def sqr(x):
-    return x[0] * x[0] + x[1] * x[1]
-
-
-def shortest(p, mem={}):
-    if p.x == 0 and p.y == 0:
-        return 0
-    if p in mem:
-        return mem[p]
-
-    mn = math.inf
-    for dr in dirs.values():
-        np = Pos(p.x + dr.x, p.y + dr.y)
-        if sqr(np) < sqr(p):
-            mn = min(mn, 1 + shortest(np))
-
-    mem[p] = mn
-    return mn
+def shortest(p):
+    h = abs(p.x // 0.5)
+    v = max(0, abs(p.y) - h * 0.5)
+    return round(h + v)
 
 
 def solve_part1(s):
