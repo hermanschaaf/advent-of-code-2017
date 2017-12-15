@@ -2,7 +2,6 @@
 
 from __future__ import print_function, unicode_literals
 
-import math
 import re
 from collections import defaultdict
 
@@ -17,16 +16,9 @@ class Node(object):
         self.children = []
         self.parents = []
 
-        self.reset()
-
     def add_child(self, child):
         self.children.append(child)
         child.parents.append(self)
-
-    def reset(self):
-        self.discovered = False
-        self.processed = False
-        self.earliest = math.inf
 
     def solve(self):
         counts = defaultdict(list)
